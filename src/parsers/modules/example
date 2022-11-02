@@ -1,0 +1,43 @@
+import * as path from "path";
+
+import {fileParser} from "../fileParser";
+
+// add the path of the input file you want to parse attention the file has to exist inside excel folder.
+const fileInPath = path.resolve(__dirname + '/../../../excel/mappingVision.xlsx');
+// add the path of the output were you want to store the output json response if the file does exist that will be creat inside of data folder.
+const fileOutPath = path.resolve(__dirname + '/../../../data/json/mappingFile.json');
+
+type Fields = {
+    // add each name of the rows you want to pick up the information, add the type of the field.
+    class: string;
+    fieldAlias: string;
+    tableName: string;
+    column: string;
+};
+
+const sortRows = (rows: string[]): Fields | null => {
+    // add each name of the rows you want to pick up the information, and add rows[ + more the position of the column you want to pick].
+    const fieldData: Fields = {
+        class: rows[0],
+        fieldAlias: rows[1],
+        tableName: rows[4],
+        column: rows[5]
+    }
+    // you can some condition, to return the right data and return null to avoid the wrong data.
+    if (fieldData.tableName == "WORK")
+        return null;
+    return fieldData;
+}
+
+// here change only  the name of the function.
+export const getMappingFileContent = async (): Promise<Fields[]> => {
+    return fileParser<Fields>(fileInPath, fileOutPath, sortRows)
+}
+
+// this only to test your function above
+/*
+const main = async () => {
+    await getMappingFileContent(); // change by the name of the function above
+}
+
+main().then();*/
